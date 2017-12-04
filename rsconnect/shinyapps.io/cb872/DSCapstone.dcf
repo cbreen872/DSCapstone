@@ -1,0 +1,11 @@
+name: DSCapstone
+title: DSCapstone
+account: cb872
+server: shinyapps.io
+appId: 243499
+bundleId: 1112822
+url: https://cb872.shinyapps.io/DSCapstone/
+when: 1512345763.13575
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|WordPredictPresentation.md|WordPredictPresentation.Rpres|final/de_DE/de_DE.blogs.txt|final/de_DE/de_DE.news.txt|final/de_DE/de_DE.twitter.txt|final/fi_FI/fi_FI.blogs.txt|final/fi_FI/fi_FI.news.txt|final/fi_FI/fi_FI.twitter.txt|final/ru_RU/ru_RU.blogs.txt|final/ru_RU/ru_RU.news.txt|final/ru_RU/ru_RU.twitter.txt|OtherProjectDocs/Week1_Capstone|OtherProjectDocs/week1Capstone|OtherProjectDocs/Week2_Capstone.html|OtherProjectDocs/Week2_Capstone.Rmd|WordPredictPresentation-figure/unnamed-chunk-2-1.png
