@@ -10,6 +10,9 @@ library(dplyr)
 blogsData <- readLines("./final/en_US/en_US.blogs.txt", encoding = "UTF-8", skipNul = TRUE)
 newsData <- readLines("./final/en_US/en_US.news.txt", encoding = "UTF-8", skipNul = TRUE)
 twitterData <- readLines("./final/en_US/en_US.twitter.txt", encoding = "UTF-8", skipNul = TRUE)
+badwords <- readLines("profanityfile.txt",encoding = "UTF-8", skipNul = TRUE)
+badwords <- tolower(badwords)
+badwords <- str_replace_all(badwords, "\\(", "\\\\(")
 
 # set sample size
 set.seed(100)
@@ -22,13 +25,15 @@ sample_twitter <- twitterData[sample(1:length(twitterData),sample_size)]
 sample_data<-rbind(sample_blog,sample_news,sample_twitter)
 rm(blogsData,newsData,twitterData)
 
-mycorpus<-VCorpus(VectorSource(sample_data))
-mycorpus <- tm_map(mycorpus, content_transformer(tolower)) # convert to lowercase
-mycorpus <- tm_map(mycorpus, removePunctuation) # remove punctuation
-mycorpus <- tm_map(mycorpus, removeNumbers) # remove numbers
-mycorpus <- tm_map(mycorpus, stripWhitespace) # remove multiple whitespace
+corpus<-VCorpus(VectorSource(sample_data))
+corpus <- tm_map(corpus, content_transformer(tolower)) # convert to lowercase
+corpus <- tm_map(corpus, removePunctuation) # remove punctuation
+corpus <- tm_map(corpus, removeNumbers) # remove numbers
+corpus <- tm_map(corpus, stripWhitespace) # remove multiple whitespace
 changetospace <- content_transformer(function(x, pattern) gsub(pattern, " ", x))
-mycorpus <- tm_map(mycorpus, changetospace, "/|@|\\|")
+corpus <- tm_map(corpus, changetospace, "/|@|\\|")
+mycorpus <- tm_map(corpus, removeWords, badwords)
+rm(badwords)
 
 
 uniGramTokenizer <- function(x) NGramTokenizer(x, Weka_control(min = 1, max = 1))
@@ -44,27 +49,15 @@ termFreq1 <- rowSums(as.matrix(oneGM[freqTerms1,]))
 termFreq1 <- data.frame(unigram=names(termFreq1), frequency=termFreq1)
 termFreq1 <- termFreq1[order(-termFreq1$frequency),]
 unigramlist <- setDT(termFreq1)
-saveRDS(unigramlist,file="unigram.rds",ascii = FALSE, version = NULL,
-        compress = TRUE, refhook = NULL)
+save(unigramlist,file="unigram.Rda")
 freqTerms2 <- findFreqTerms(twoGM, lowfreq = 3)
 termFreq2 <- rowSums(as.matrix(twoGM[freqTerms2,]))
 termFreq2 <- data.frame(bigram=names(termFreq2), frequency=termFreq2)
 termFreq2 <- termFreq2[order(-termFreq2$frequency),]
 bigramlist <- setDT(termFreq2)
-saveRDS(bigramlist,file="bigram.rds",ascii = FALSE, version = NULL,
-        compress = TRUE, refhook = NULL)
+save(bigramlist,file="bigram.Rda")
 freqTerms3 <- findFreqTerms(threeGM, lowfreq = 2)
 termFreq3 <- rowSums(as.matrix(threeGM[freqTerms3,]))
 termFreq3 <- data.frame(trigram=names(termFreq3), frequency=termFreq3)
 trigramlist <- setDT(termFreq3)
-saveRDS(trigramlist,file="trigram.rds",ascii = FALSE, version = NULL,
-        compress = TRUE, refhook = NULL)
-
-#bad words
-
-badwords <- readLines("profanityfile.txt",encoding = "UTF-8", skipNul = TRUE)
-badwords <- tolower(badwords)
-badwords <- str_replace_all(badwords, "\\(", "\\\\(")
-saveRDS(badwords, "badwords.rds",ascii = FALSE, version = NULL,
-        compress = TRUE, refhook = NULL)
-rm(badwords)
+save(trigramlist,file="trigram.Rda")

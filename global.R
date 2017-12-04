@@ -1,6 +1,6 @@
-readRDS("unigram.rds")
-readRDS("bigram.rds")
-readRDS("trigram.rds")
+load("unigram.Rda")
+load("bigram.Rda")
+load("trigram.Rda")
 
 wordproc <- function(sentence){
   value = "next word is..."

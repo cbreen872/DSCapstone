@@ -14,7 +14,14 @@ fluidPage(
     h4('string you entered : '),
     verbatimTextOutput("inputValue"),
     h4('next word :'),
-    verbatimTextOutput("prediction")
-    
+    verbatimTextOutput("prediction"),
+    tags$button(
+        id = 'close',
+        type = "button",
+        class = "btn action-button",
+        onclick = "setTimeout(function(){window.close();},500);",  # close browser
+        "Close window"
+      )
   )
+  
 )
